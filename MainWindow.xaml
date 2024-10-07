@@ -1,12 +1,150 @@
 ﻿<Window x:Class="SchoolAutoShedule.MainWindow"
+        xmlns:ctls="clr-namespace:SchoolAutoShedule.Controls" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SchoolAutoShedule"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        mc:Ignorable="d" Name="home"
+        Title="MainWindow" Height="650" Width="1000"
+        WindowStartupLocation="CenterScreen" WindowStyle="None"
+        Background="Transparent" AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip" FontFamily="Poppins">
+    <Border Background="{DynamicResource PrimaryBackgroundColor}"
+        CornerRadius="8 0 0 8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="60"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <Border Grid.Column="0"
+                Background="{DynamicResource SecundaryBackgroundColor}"
+                CornerRadius="8 0 0 8">
+                <Grid x:Name="GridNav" Width="60">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Border 
+                          Margin="14 0 0 0"  PreviewMouseLeftButtonDown="WindowMove"
+                          Width="32" Height="34"
+                          HorizontalAlignment="Left">
+                            <Border.Background >
+                                <ImageBrush ImageSource="/logo.png" Stretch="Uniform" />
+                            </Border.Background>
+                        </Border>
+
+                        <Label Content="ШАР"
+                           Foreground="{DynamicResource PrimaryTextColor}"
+                           FontWeight="Bold"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="60 0 0 0"
+                           Padding="5 10 0 0"/>
+                    </Grid>
+
+                    <!-- Start: MenuItem -->
+                    <StackPanel Grid.Row="1" Margin="-1 20 0 20">
+                        <Button x:Name="btnTeachers" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnTeachers_MouseEnter" MouseLeave="hidePopup" Click="btnHome_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource teachers}" IconWidth="32" Text="Учителя" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnSubjects" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnSubjects_MouseEnter" MouseLeave="hidePopup" Click="btnSubjects_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource subjects}" IconWidth="24" Text="Предметы" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnSchProgram" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnSchProgram_MouseEnter" MouseLeave="hidePopup" Click="btnSchProgram_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource schProgram}" IconWidth="28" Text="Шк. Программа" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnSchInfo" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnSchInfo_MouseEnter" MouseLeave="hidePopup" Click="btnSchInfo_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource schInfo}" IconWidth="32" Text="Инфа О Школе" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnCreateSchedule" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnCreateSchedule_MouseEnter" MouseLeave="hidePopup" Click="btnScheduleCreator_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource schedule}" IconWidth="24" Text="Создать" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnExportSchedule" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnExportSchedule_MouseEnter" MouseLeave="hidePopup" Click="btnExportSchedule_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource email}" IconWidth="24" Text="Экспортировать" VerticalAlignment="Center"/>
+                        </Button>
+                        <Button x:Name="btnSetting" Style="{DynamicResource PopupButtonStyle}"  MouseEnter="btnSetting_MouseEnter" MouseLeave="hidePopup" Click="btnSettings_Click">
+                            <ctls:MenuItem GroupName="MenuItem" IndicatorBrush="{DynamicResource PrimaryBlueColor}" Icon="{DynamicResource settings}" IconWidth="24" Text="Настройки" VerticalAlignment="Center"/>
+                        </Button>
+                    </StackPanel>
+                    <!-- End: MenuItem -->
+
+                    <!-- Start: Popup User Control -->
+                    <Popup x:Name="Popup"  AllowsTransparency="True"  HorizontalOffset="0" VerticalOffset="10">
+                        <ctls:UserPopup x:Name="Header" Foreground="{DynamicResource PrimaryTextColor}"/>
+                    </Popup>
+                    <!-- End: Popup User Control -->
+
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <ToggleButton x:Name="Tg_Btn" Grid.Column="1" VerticalAlignment="Center" Style="{DynamicResource iToggleButtonStyle}" HorizontalAlignment="Left" BorderThickness="0" Background="Transparent" Margin="10,15,0,15" Height="30" Width="30">
+                    <ToggleButton.Triggers>
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <BeginStoryboard>
+                                <Storyboard x:Name="HideStackPanel">
+                                    <DoubleAnimation Storyboard.TargetName="GridNav" Storyboard.TargetProperty="Width" BeginTime="0:0:0" From="210" To="60" Duration="0:0:0.5">
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <BeginStoryboard>
+                                <Storyboard x:Name="ShowStackPanel">
+                                    <DoubleAnimation Storyboard.TargetName="GridNav" Storyboard.TargetProperty="Width" BeginTime="0:0:0" From="60" To="210" Duration="0:0:0.5">
+                                    </DoubleAnimation>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+                <Border 
+                    Background="{DynamicResource SecundaryBackgroundColor}"
+                    CornerRadius="12 12 0 0" Padding="10 6" HorizontalAlignment="Center" Margin="0 5 0 0"
+                    VerticalAlignment="Center" PreviewMouseLeftButtonDown="WindowMove">
+                    <Label Content="Школьное Авто Расписание - ШАР"
+                       Foreground="{DynamicResource PrimaryTextColor}"
+                       FontWeight="Bold"
+                       FontSize="24"
+                       Background="Transparent"/>
+                </Border>
+                <!-- Start: Button Close | Restore | Minimize -->
+                <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Height="30" Orientation="Horizontal" FlowDirection="RightToLeft" Grid.RowSpan="2">
+                    <Button x:Name="btnClose" Style="{StaticResource IconButtonsStyle}" Content="{DynamicResource close}" Click="btnClose_Click" Tag="IsCloseButton"/>
+                    <Button x:Name="btnRestore" Margin="5,0" Click="btnRestore_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource IconButtonsStyle}">
+                                <Setter Property="Content" Value="{DynamicResource maximize}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
+                                        <Setter Property="Content" Value="{DynamicResource restore}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="btnMinimize" Style="{DynamicResource IconButtonsStyle}" Content="{DynamicResource minimize}" Click="btnMinimize_Click"/>
+                </StackPanel>
+                <!-- End: Button Close | Restore | Minimize -->
+
+                <Frame Grid.Row="1"
+                   Name="fContainer"
+                   Margin="10 0 10 10"
+                   NavigationUIVisibility="Hidden">
+
+                </Frame>
+
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
